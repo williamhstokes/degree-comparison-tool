@@ -1,0 +1,30 @@
+{
+  "name": "uagc-degree-comparison-tool",
+  "version": "1.1.0",
+  "description": "UAGC Degree Comparison Tool — static Drupal-embeddable web app with a syncable program catalog",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "npx --yes serve -l 4173 .",
+    "serve": "npx --yes serve -l 4173 .",
+    "sync": "node scripts/sync-programs.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/williamhstokes/degree-comparison-tool.git"
+  },
+  "bugs": {
+    "url": "https://github.com/williamhstokes/degree-comparison-tool/issues"
+  },
+  "homepage": "https://github.com/williamhstokes/degree-comparison-tool#readme",
+  "keywords": [
+    "uagc",
+    "degree-comparison",
+    "drupal",
+    "static-site",
+    "higher-education"
+  ]
+}

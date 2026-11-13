@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" data-catalog-url="data/programs.json">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Degree Comparison Tool | University of Arizona Global Campus</title>
+    <meta
+      name="description"
+      content="Compare up to three University of Arizona Global Campus online degree programs with career outlook and salary context."
+    />
+    <!-- GitHub Pages / subpath: force trailing slash so relative CSS/JS/JSON resolve correctly -->
+    <script>
+      (function () {
+        if (location.protocol === "file:") return;
+        var path = location.pathname;
+        if (!path.endsWith("/") && !/\.html?$/i.test(path)) {
+          location.replace(path + "/" + location.search + location.hash);
+        }
+      })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js" defer></script>
+    <!-- Optional Drupal/CDN override: window.UAGC_CATALOG_URL = '/sites/default/files/dct/programs.json'; -->
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="brand-lockup">
+        <div class="brand-mark"><span class="dot" aria-hidden="true"></span> University of Arizona Global Campus</div>
+        <h1 class="site-title">Degree Comparison Tool</h1>
+        <p class="site-lede">
+          Choose your state, degree level, and interests—then compare up to three UAGC programs with career outlook context.
+        </p>
+      </div>
+    </header>
+
+    <nav class="progress-rail" aria-label="Comparison steps">
+      <ol>
+        <li data-step="location">1 · State</li>
+        <li data-step="level">2 · Level</li>
+        <li data-step="interests">3 · Interests</li>
+        <li data-step="compare">4 · Compare</li>
+      </ol>
+    </nav>
+
+    <main id="main">
+      <div id="bootError" class="boot-error" hidden></div>
+
+      <div class="catalog-meta">
+        <span id="catalogMeta">Loading catalog…</span>
+        <button type="button" id="reloadCatalogBtn" class="btn btn-ghost">Reload catalog</button>
+      </div>
+
+      <section class="panel" aria-labelledby="location-heading">
+        <h2 id="location-heading">Where will you study from?</h2>
+        <p class="hint">Select your U.S. state so we can surface relevant enrollment notes.</p>
+        <div class="field">
+          <label for="stateSelect">State</label>
+          <select id="stateSelect" name="state" autocomplete="address-level1" required></select>
+          <div id="stateNote" class="state-note" role="status"></div>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="level-heading">
+        <h2 id="level-heading">Degree level</h2>
+        <p class="hint">Pick one level to filter programs.</p>
+        <div id="levelRow" class="chip-row" role="group" aria-label="Degree level"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="areas-heading">
+        <h2 id="areas-heading">Areas of interest</h2>
+        <p class="hint">Select all that apply. Programs can appear in more than one area.</p>
+        <div id="areaGrid" class="area-grid"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="programs-heading">
+        <div class="compare-bar">
+          <h2 id="programs-heading" style="margin:0">Programs</h2>
+          <div id="compareCount" class="compare-count"><span class="num">0</span> of 3 selected</div>
+        </div>
+        <p class="hint">Select up to three degrees to compare side by side.</p>
+        <div id="programList" class="program-list"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="demo-heading">
+        <h2 id="demo-heading">About you <span class="optional-badge">Optional</span></h2>
+        <p class="hint">
+          These questions are optional and used only for aggregate statistics if your site wires analytics. They are not required to compare degrees.
+        </p>
+        <div class="demo-grid">
+          <div class="field">
+            <label for="ethnicity">Ethnicity</label>
+            <select id="ethnicity">
+              <option value="">Prefer not to say</option>
+              <option>American Indian or Alaska Native</option>
+              <option>Asian</option>
+              <option>Black or African American</option>
+              <option>Hispanic or Latino</option>
+              <option>Native Hawaiian or Other Pacific Islander</option>
+              <option>White</option>
+              <option>Two or more races</option>
+              <option>Another identity</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="ageRange">Age range</label>
+            <select id="ageRange">
+              <option value="">Prefer not to say</option>
+              <option>Under 25</option>
+              <option>25–34</option>
+              <option>35–44</option>
+              <option>45–54</option>
+              <option>55+</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="military">Military affiliation</label>
+            <select id="military">
+              <option value="">Prefer not to say</option>
+              <option>Active duty</option>
+              <option>Veteran</option>
+              <option>Military spouse / dependent</option>
+              <option>None</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="firstGen">First-generation college student</label>
+            <select id="firstGen">
+              <option value="">Prefer not to say</option>
+              <option>Yes</option>
+              <option>No</option>
+              <option>Not sure</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="employment">Current employment</label>
+            <select id="employment">
+              <option value="">Prefer not to say</option>
+              <option>Full-time</option>
+              <option>Part-time</option>
+              <option>Not currently employed</option>
+              <option>Self-employed</option>
+            </select>
+          </div>
+        </div>
+        <div class="privacy-box">
+          <strong>Privacy &amp; disclaimer.</strong>
+          Optional demographic answers stay in your browser session for this tool and are not required to view results.
+          If your Drupal site connects this block to analytics, share only aggregate, de-identified counts.
+          Do not use these fields for admissions decisions. Review the
+          <a href="https://www.uagc.edu/about/privacy-policy" target="_blank" rel="noopener noreferrer">UAGC Privacy Policy</a>.
+        </div>
+      </section>
+
+      <div class="actions">
+        <button type="button" id="compareBtn" class="btn btn-primary" disabled>Compare degrees</button>
+        <button type="button" id="resetBtn" class="btn btn-secondary">Start over</button>
+      </div>
+      <p id="compareHint" class="hint" style="margin-top:0.65rem">Select your state to continue.</p>
+
+      <section id="results" aria-live="polite">
+        <div id="resultsIntro" class="results-intro"></div>
+        <div id="resultsGrid" class="results-grid"></div>
+        <div class="insights">
+          <h2>Career outlook &amp; earnings context</h2>
+          <p class="hint">Charts use curated public labor-market figures for occupations commonly associated with each degree path.</p>
+          <div class="chart-grid">
+            <div class="chart-panel">
+              <h3>Related median annual wage</h3>
+              <div class="chart-wrap"><canvas id="wageChart" aria-label="Median wage comparison chart"></canvas></div>
+            </div>
+            <div class="chart-panel">
+              <h3>Projected employment growth</h3>
+              <div class="chart-wrap"><canvas id="growthChart" aria-label="Employment growth comparison chart"></canvas></div>
+            </div>
+          </div>
+          <div class="compare-table-wrap">
+            <table class="compare-table">
+              <thead>
+                <tr>
+                  <th>Program</th>
+                  <th>Related occupations</th>
+                  <th>Median wage</th>
+                  <th>Wage range (10th–90th)</th>
+                  <th>Growth</th>
+                  <th>Credits</th>
+                </tr>
+              </thead>
+              <tbody id="compareTableBody"></tbody>
+            </table>
+          </div>
+          <div id="sources" class="sources"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Program catalog loaded at runtime from <code>data/programs.json</code> (synced from
+        <a href="https://www.uagc.edu/online-degrees" target="_blank" rel="noopener noreferrer">uagc.edu/online-degrees</a>).
+        Labor figures curated from public BLS OEWS / Employment Projections and O*NET OnLine.
+      </p>
+    </footer>
+
+    <script src="js/data/states.js"></script>
+    <script src="js/data/labor-market.js"></script>
+    <script src="js/data/catalog-fallback.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
